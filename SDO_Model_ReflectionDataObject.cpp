@@ -207,7 +207,7 @@ void sdo_model_rdo_minit(zend_class_entry *tmp_ce TSRMLS_DC)
 	tmp_ce->create_object = sdo_model_rdo_object_create;
 
 	if (zend_hash_find(CG(class_table), "reflector", sizeof("reflector"), (void **)&reflector_ce_ptr) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - could not find Reflector class",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
@@ -245,7 +245,7 @@ PHP_METHOD(SDO_Model_ReflectionDataObject, __construct)
 
 	DataObjectPtr dop = sdo_do_get(z_do TSRMLS_CC);
 	if (!dop) {
-		const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETURN_NULL();
@@ -279,7 +279,7 @@ PHP_METHOD(SDO_Model_ReflectionDataObject, export)
 	reflection_ce = zend_fetch_class ("Reflection", strlen("Reflection"),
 		ZEND_FETCH_CLASS_AUTO TSRMLS_CC);
 	if (!reflection_ce) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - could not find Reflection class",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
@@ -287,7 +287,7 @@ PHP_METHOD(SDO_Model_ReflectionDataObject, export)
 
 	reflection_export_zf = zend_std_get_static_method(reflection_ce, "export", strlen("export") TSRMLS_CC);
 	if (!reflection_export_zf) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - could not call Reflection::export method",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;

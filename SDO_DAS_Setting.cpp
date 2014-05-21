@@ -117,7 +117,7 @@ void sdo_das_setting_new(zval *me, Setting *setting TSRMLS_DC)
 
 	Z_TYPE_P(me) = IS_OBJECT;
 	if (object_init_ex(me, sdo_das_setting_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 		return;
@@ -149,7 +149,7 @@ static zval *sdo_das_setting_read_value (sdo_das_setting_object *my_object TSRML
 			const Property& property = setting->getProperty();
 			switch(property.getTypeEnum()) {
 			case Type::OtherTypes: {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'OtherTypes'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
@@ -178,7 +178,7 @@ static zval *sdo_das_setting_read_value (sdo_das_setting_object *my_object TSRML
 			case Type::CharacterType: {
 				wchar_value = setting->getCharacterValue();
 				if (wchar_value > INT_MAX) {
-					const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_WARNING, "%s%s%s(): wide character data lost for '%s'",
 						class_name, space, get_active_function_name(TSRMLS_C), property.getName());
 				}
@@ -228,19 +228,19 @@ static zval *sdo_das_setting_read_value (sdo_das_setting_object *my_object TSRML
 				break;
 			}
 			case Type::ChangeSummaryType: {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'ChangeSummaryType'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
 			}
 			case Type::TextType: {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'TextType'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
 			}
 			default: {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type '%s' for property '%s'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__,
 					property.getType().getName(), property.getName());

@@ -677,7 +677,7 @@ void DataObjectListImpl::append (short d)
     append( dol);
 }
 
-
+/*
 #if 32 !=64
 void DataObjectListImpl::insert (unsigned int index, long d)
 {
@@ -703,7 +703,7 @@ void DataObjectListImpl::append (long d)
     append( dol);
 }
 #endif
-
+*/
 void DataObjectListImpl::insert (unsigned int index, const SDODate d)
 {
     if (theFactory == 0) return;

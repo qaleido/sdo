@@ -475,7 +475,7 @@ class DataFactory : public RefCountingObject
             const SDOString& propname ,
             short s) = 0;
 
-
+/*
 #if 32 !=64
         virtual SDO_API void setDefault(
             const Type& t,
@@ -487,6 +487,7 @@ class DataFactory : public RefCountingObject
             const SDOString& propname ,
             long l) = 0;
 #endif
+*/
 
         virtual SDO_API void setDefault(
             const Type& t,
@@ -613,7 +614,7 @@ class DataFactory : public RefCountingObject
             const SDOString& propname ,
             short s) = 0;
 
-
+/*
 #if 32 !=64
         virtual SDO_API void setDefault(
             const char* typuri,
@@ -628,6 +629,7 @@ class DataFactory : public RefCountingObject
             long l) = 0;
 
 #endif
+*/
 
         virtual SDO_API void setDefault(
             const char* typuri,

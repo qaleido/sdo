@@ -334,7 +334,7 @@ public:
         short s) ;
 
 
-
+/*
 #if 32 !=64
     virtual void setDefault(
         const Type& t, 
@@ -347,7 +347,7 @@ public:
         long l) ;
 
 #endif
-
+*/
     virtual void setDefault(
         const Type& t, 
         const char* propname , 
@@ -471,7 +471,7 @@ public:
         const SDOString& typnam, 
         const SDOString& propname , 
         short s) ;
-
+/*
 #if 32 !=64
     virtual void setDefault(
         const char* typuri, 
@@ -486,7 +486,7 @@ public:
         long l) ;
 
 #endif
-
+*/
     virtual void setDefault(
         const char* typuri, 
         const char* typnam, 

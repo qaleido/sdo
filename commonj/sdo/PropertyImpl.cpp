@@ -231,12 +231,14 @@ namespace commonj{
     {
         setDefaultShort(s);
     }
+/*
 #if 32 !=64
     void PropertyImpl::setDefault(long i )
     {
         setDefaultInteger(i);
     }
 #endif
+*/
     void PropertyImpl::setDefault(int64_t i )
     {
         setDefaultLong(i);

@@ -121,7 +121,7 @@ void sdo_model_type_new(zval *me, const Type *typep TSRMLS_DC)
 
 	Z_TYPE_P(me) = IS_OBJECT;
 	if (object_init_ex(me, sdo_model_typeimpl_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 		ZVAL_NULL(me);
@@ -296,7 +296,7 @@ void sdo_model_type_minit(zend_class_entry *tmp_ce TSRMLS_DC)
 PHP_METHOD(SDO_Model_TypeImpl, __construct)
 {
 //	char *class_name, *space;
-	const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+	/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 
 	php_error(E_ERROR, "%s%s%s(): internal error - private constructor was called",
 		class_name, space, get_active_function_name(TSRMLS_C));
@@ -361,7 +361,7 @@ PHP_METHOD(SDO_Model_TypeImpl, isInstance)
 
 	DataObjectPtr dop = sdo_do_get(z_do TSRMLS_CC);
 	if (!dop) {
-		const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;

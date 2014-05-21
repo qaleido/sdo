@@ -1538,7 +1538,7 @@ namespace sdo{
 #endif
         }
     }
-
+/*
 #if 32 !=64
     // setInteger
     unsigned int TypeImpl::convert(void** value,const long i) const
@@ -1632,6 +1632,7 @@ namespace sdo{
     }
 
 #endif
+*/
 
     // setLongLong
 

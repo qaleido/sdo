@@ -78,6 +78,7 @@ namespace commonj
             {
                value.Short = inValue;
             }
+/*
 #if 32 != 64
             SDO_API SDOValue(long inValue) : 
                typeOfValue(DataTypeInfo::SDOlong), transient_buffer(0)
@@ -85,6 +86,7 @@ namespace commonj
                value.Integer = inValue;
             }
 #endif
+*/
             SDO_API SDOValue(int64_t inValue) : 
                typeOfValue(DataTypeInfo::SDOint64_t), transient_buffer(0)
             {

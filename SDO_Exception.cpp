@@ -114,7 +114,7 @@ void sdo_exception_new(zval *z_ex, zend_class_entry *ce, const char *message, lo
 
 	Z_TYPE_P(z_ex) = IS_OBJECT;
 	if (object_init_ex(z_ex, ce) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 		return;

@@ -931,7 +931,7 @@ void DataFactoryImpl::setBaseType(const SDOString& typeuri,
     {
         setDefault(t.getURI(), t.getName(), propname.c_str(), s);
     }
-
+/*
 #if 32 !=64
     void DataFactoryImpl::setDefault(
         const Type& t, const char* propname , long l) 
@@ -946,7 +946,7 @@ void DataFactoryImpl::setBaseType(const SDOString& typeuri,
     }
 
 #endif
-
+*/
     void DataFactoryImpl::setDefault(
         const Type& t, const char* propname , int64_t i) 
     {
@@ -1100,7 +1100,7 @@ void DataFactoryImpl::setBaseType(const SDOString& typeuri,
     {
       setDefault(typuri.c_str(), typnam.c_str(), propname.c_str(), s);
     }
-
+/*
 #if 32 !=64
     void DataFactoryImpl::setDefault(
         const char* typuri, const char* typnam, 
@@ -1119,7 +1119,7 @@ void DataFactoryImpl::setBaseType(const SDOString& typeuri,
     }
 
 #endif
-
+*/
     void DataFactoryImpl::setDefault(
         const char* typuri, const char* typnam, 
         const char* propname , int64_t i) 

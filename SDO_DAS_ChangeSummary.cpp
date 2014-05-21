@@ -118,7 +118,7 @@ void sdo_das_changesummary_new(zval *me, ChangeSummaryPtr change_summary TSRMLS_
 
 	Z_TYPE_P(me) = IS_OBJECT;
 	if (object_init_ex(me, sdo_das_changesummary_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
@@ -229,7 +229,7 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getOldValues)
 	/* get the supplied data object */
 	dop = sdo_do_get (z_dataobject TSRMLS_CC);
 	if (!dop) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETVAL_NULL();
@@ -300,7 +300,7 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getChangeType)
 	/* get the supplied data object */
 	dop = sdo_do_get (z_dataobject TSRMLS_CC);
 	if (!dop) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETVAL_NULL();
@@ -347,7 +347,7 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getOldContainer)
 	/* get the supplied data object */
 	dop = sdo_do_get(z_dataobject TSRMLS_CC);
 	if (!dop) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETVAL_NULL();

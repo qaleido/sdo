@@ -68,7 +68,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	if (!z_offset) {
 		/* get here with a statement like $sdo[] = 'some value'; */
 		if (!quiet) {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0, 0 TSRMLS_CC,
 				"%s%s%s(): cannot append a value - this object is not many-valued",
 				class_name, space, get_active_function_name(TSRMLS_C));
@@ -79,7 +79,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	switch(Z_TYPE_P(z_offset)) {
 	case IS_NULL:
 		if (!quiet) {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0, 0 TSRMLS_CC,
 				"%s%s%s(): parameter is NULL",
 				class_name, space, get_active_function_name(TSRMLS_C));
@@ -105,7 +105,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	case IS_DOUBLE:
 		if (Z_TYPE_P(z_offset) == IS_DOUBLE) {
 			if (!quiet) {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_WARNING, "%s%s%s(): double parameter %f rounded to %i",
 					class_name, space, get_active_function_name(TSRMLS_C),
 					Z_DVAL_P(z_offset), (long)Z_DVAL_P(z_offset));
@@ -123,7 +123,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	case IS_OBJECT:
 		if (!instanceof_function(Z_OBJCE_P(z_offset), sdo_model_property_class_entry TSRMLS_CC)) {
 			if (!quiet) {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0, 0 TSRMLS_CC,
 					"%s%s%s(): expects object parameter to be SDO_Model_Property, %s given",
 					class_name, space, get_active_function_name(TSRMLS_C),
@@ -136,7 +136,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 		break;
 	default:
 		if (!quiet) {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error - invalid dimension type %i",
 				class_name, space, get_active_function_name(TSRMLS_C),
 				Z_TYPE_P(z_offset));

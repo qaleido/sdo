@@ -130,7 +130,7 @@ void sdo_model_property_new(zval *me, const Property *propertyp TSRMLS_DC)
 
 	Z_TYPE_P(me) = IS_OBJECT;
 	if (object_init_ex(me, sdo_model_propertyimpl_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 		ZVAL_NULL(me);
@@ -156,7 +156,7 @@ void sdo_model_property_get_default(const Property *propertyp, zval *return_valu
 	try {
 		switch(propertyp->getTypeEnum()) {
 		case Type::OtherTypes: {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'OtherTypes'",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 			break;
@@ -189,7 +189,7 @@ void sdo_model_property_get_default(const Property *propertyp, zval *return_valu
 		case Type::CharacterType: {
 			wchar_value = propertyp->getCharacterDefault();
 			if (wchar_value > INT_MAX) {
-				const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_WARNING, "%s%s%s(): wide character data lost for '%s'",
 					class_name, space, get_active_function_name(TSRMLS_C), propertyp->getName());
 			}
@@ -246,19 +246,19 @@ void sdo_model_property_get_default(const Property *propertyp, zval *return_valu
 			break;
 			}
 		case Type::ChangeSummaryType: {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected type 'ChangeSummaryType' for property %s",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__, propertyp->getName());
 			break;
 			}
 		case Type::TextType: {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected type 'TextType' for property %s",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__, propertyp->getName());
 			break;
 			}
 		default: {
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type '%s' for property '%s'",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__,
 				propertyp->getType().getName(), propertyp->getName());
@@ -438,7 +438,7 @@ void sdo_model_property_minit(zend_class_entry *tmp_ce TSRMLS_DC)
 PHP_METHOD(SDO_Model_PropertyImpl, __construct)
 {
 //	char *class_name, *space;
-	const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+	/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 
 	php_error(E_ERROR, "%s%s%s(): internal error - private constructor was called",
 		class_name, space, get_active_function_name(TSRMLS_C));

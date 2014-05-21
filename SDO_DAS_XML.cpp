@@ -275,7 +275,7 @@ static int sdo_das_xml_add_types(xmldas_object *xmldas, char *file_name TSRMLS_D
         if (error_count > 0) {
 			ostringstream print_buf;
 
-			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 
 			print_buf << class_name << space << get_active_function_name(TSRMLS_C) <<
 				" - Unable to parse the supplied xsd file\n";
@@ -368,7 +368,7 @@ void sdo_das_xml_minit(TSRMLS_D)
 PHP_METHOD(SDO_DAS_XML, __construct)
 {
 //	char *class_name, *space;
-	const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+	/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 
 	php_error(E_ERROR, "%s%s%s(): internal error - private constructor was called",
 		class_name, space, get_active_function_name(TSRMLS_C));
@@ -450,7 +450,7 @@ PHP_METHOD(SDO_DAS_XML, create)
      */
     Z_TYPE_P(return_value) = IS_OBJECT;
     if (object_init_ex(return_value, sdo_das_xml_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
         return;
@@ -625,14 +625,14 @@ PHP_METHOD(SDO_DAS_XML, loadFile)
     if (file_name_len) {
         Z_TYPE_P(return_value) = IS_OBJECT;
         if (object_init_ex(return_value, sdo_das_xml_document_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
             RETURN_NULL();
         }
         xmldocument = (xmldocument_object *) zend_object_store_get_object(return_value TSRMLS_CC);
         if (!xmldocument) {
-			const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DAS_XML_Document not found in store",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
             RETURN_NULL();
@@ -723,14 +723,14 @@ PHP_METHOD(SDO_DAS_XML, loadString)
 	if (xml_string_len) {
         Z_TYPE_P(return_value) = IS_OBJECT;
         if (object_init_ex(return_value, sdo_das_xml_document_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
             return;
         }
         xmldocument = (xmldocument_object *) zend_object_store_get_object(return_value TSRMLS_CC);
         if (!xmldocument) {
-			const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+			/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DAS_XML_Document not found in store",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		}
@@ -812,7 +812,7 @@ PHP_METHOD(SDO_DAS_XML, saveFile)
 
     xmldocument = (xmldocument_object *) zend_object_store_get_object(z_document TSRMLS_CC);
     if (!xmldocument) {
-		const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DAS_XML_Document not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
     }
@@ -847,7 +847,7 @@ PHP_METHOD(SDO_DAS_XML, saveString)
 
     xmldocument = (xmldocument_object *) zend_object_store_get_object(z_document TSRMLS_CC);
     if (!xmldocument) {
-		const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DAS_XML_Document not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
     }
@@ -885,14 +885,14 @@ PHP_METHOD(SDO_DAS_XML, createDocument)
 
     Z_TYPE_P(return_value) = IS_OBJECT;
     if (object_init_ex(return_value, sdo_das_xml_document_class_entry) == FAILURE) {
-		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
         RETURN_NULL();
 	}
     xmldocument = (xmldocument_object *) zend_object_store_get_object(return_value TSRMLS_CC);
     if (!xmldocument) {
-		const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DAS_XML_Document not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
         RETURN_NULL();
@@ -912,7 +912,7 @@ PHP_METHOD(SDO_DAS_XML, createDocument)
 			/* get the supplied data object */
 	        dop = sdo_do_get(z_dataobject TSRMLS_CC);
 	        if (!dop) {
-		        const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		        /* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		        php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			        class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
                 RETURN_FALSE;
