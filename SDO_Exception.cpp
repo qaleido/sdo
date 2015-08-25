@@ -69,7 +69,11 @@ static zend_object_value sdo_exception_create_object(zend_class_entry *ce TSRMLS
 	ALLOC_ZVAL(z_trace);
     Z_UNSET_ISREF_P(z_trace);
     Z_SET_REFCOUNT_P(z_trace, 0);
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+        zend_fetch_debug_backtrace(z_trace, 0, 0, 0 TSRMLS_CC);
+#else
 	zend_fetch_debug_backtrace(z_trace, 0, 0 TSRMLS_CC);
+#endif
 
 	zend_update_property(exception_class_entry, &z_object,
 		"trace", sizeof("trace") - 1, z_trace TSRMLS_CC);
@@ -110,11 +114,9 @@ void sdo_exception_minit(zend_class_entry *ce TSRMLS_DC)
  */
 void sdo_exception_new(zval *z_ex, zend_class_entry *ce, const char *message, long code, zval *z_cause TSRMLS_DC)
 {
-//	char *class_name, *space;
-
 	Z_TYPE_P(z_ex) = IS_OBJECT;
 	if (object_init_ex(z_ex, ce) == FAILURE) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 		return;
@@ -154,7 +156,7 @@ zval *sdo_throw_exception (zend_class_entry *ce, const char *message, long code,
 /* {{{ sdo_throw_exception_ex
  * Throw an SDO_Exception
  */
-zval *sdo_throw_exception_ex(zend_class_entry *ce, long code, zval *z_cause TSRMLS_DC, char *format, ...)
+zval *sdo_throw_exception_ex(zend_class_entry *ce, long code, zval *z_cause TSRMLS_DC, const char *format, ...)
 {
 	va_list arg;
 	char *message;
