@@ -95,7 +95,7 @@ static void sdo_do_object_free_storage(void *object TSRMLS_DC)
 			my_object->dop->setUserData((void *)SDO_USER_DATA_EMPTY);
 			my_object->dop = NULL;
 		} catch (SDORuntimeException e) {
-			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_WARNING, "%s%s%s(): internal error - caught exception freeing DataObject",
 				class_name, space, get_active_function_name(TSRMLS_C));
 		}
@@ -163,7 +163,7 @@ DataObjectPtr sdo_do_get(zval *me TSRMLS_DC)
 void sdo_do_new(zval *me, DataObjectPtr dop TSRMLS_DC)
 {
 	sdo_do_object *my_object;
-//	char *class_name, *space;
+	const char *class_name, *space;
 
 	long object_handle = (long)dop->getUserData();
 
@@ -173,7 +173,7 @@ void sdo_do_new(zval *me, DataObjectPtr dop TSRMLS_DC)
 	 */
 	if (object_handle == SDO_USER_DATA_EMPTY) {
 		if (object_init_ex(me, sdo_dataobjectimpl_class_entry) == FAILURE) {
-			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 			return;
@@ -195,9 +195,9 @@ void sdo_do_new(zval *me, DataObjectPtr dop TSRMLS_DC)
 		/* Sanity check */
 		my_object = (sdo_do_object *)sdo_do_get_instance(me TSRMLS_CC);
 		if (!my_object) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject #%d not found in store",
-			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, object_handle);
+			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, (int)object_handle);
 			return;
 		}
 	}
@@ -236,12 +236,12 @@ static zend_object_value sdo_do_clone_obj(zval *object TSRMLS_DC)
 */
 static int sdo_do_has_dimension(zval *object, zval *offset, int check_empty TSRMLS_DC)
 {
-	const char		 *xpath;
-	const Property	 *propertyp;
-	sdo_do_object	 *my_object = (sdo_do_object *)NULL;
-	DataObjectPtr	  dop;
-	int				  return_value = 0;
-//	char			 *class_name, *space;
+	const char      *xpath;
+	const Property  *propertyp;
+	sdo_do_object   *my_object = (sdo_do_object *)NULL;
+	DataObjectPtr	dop;
+	int		return_value = 0;
+	const char	*class_name, *space;
 
 	my_object = sdo_do_get_instance(object TSRMLS_CC);
 
@@ -269,7 +269,7 @@ static int sdo_do_has_dimension(zval *object, zval *offset, int check_empty TSRM
 			} else {
 				switch (propertyp->getTypeEnum()) {
 				case Type::OtherTypes: {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'OtherTypes'",
 						class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 					return_value = 0;
@@ -314,21 +314,21 @@ static int sdo_do_has_dimension(zval *object, zval *offset, int check_empty TSRM
 					break;
 				}
 				case Type::ChangeSummaryType: {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'ChangeSummaryType'",
 						class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 					return_value = 0;
 					break;
 				}
 				case Type::TextType: {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'TextType'",
 						class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 					return_value = 0;
 					break;
 				}
 				default: {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type '%s' for property '%s'",
 						class_name, space, get_active_function_name(TSRMLS_C), __LINE__,
 						propertyp->getType().getName(), xpath);
@@ -344,7 +344,12 @@ static int sdo_do_has_dimension(zval *object, zval *offset, int check_empty TSRM
 	return return_value;
 }
 /* }}} */
-
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+static int sdo_do_has_property(zval *object, zval *member, int has_set_exists, const struct _zend_literal *key TSRMLS_DC)
+{
+  return sdo_do_has_dimension( object, member, has_set_exists TSRMLS_CC);
+}
+#endif
 /* {{{ sdo_do_read_list
  */
 static zval *sdo_do_read_list(sdo_do_object *sdo, const char *xpath, const Property *propertyp TSRMLS_DC)
@@ -373,14 +378,14 @@ static zval *sdo_do_read_list(sdo_do_object *sdo, const char *xpath, const Prope
  */
 static zval *sdo_do_read_value(sdo_do_object *sdo, const char *xpath, const Property *propertyp TSRMLS_DC)
 {
-	DataObjectPtr	 dop = sdo->dop;
-	uint			 bytes_len;
-	char			*bytes_value;
-	char			 char_value;
-	wchar_t			 wchar_value;
-	DataObjectPtr	 doh_value;
-	zval			*return_value = NULL;
-//	char			*class_name, *space;
+	DataObjectPtr	dop = sdo->dop;
+	uint		bytes_len;
+	char		*bytes_value;
+	char		char_value;
+	wchar_t		wchar_value;
+	DataObjectPtr	doh_value;
+	zval		*return_value = NULL;
+	const char	*class_name, *space;
 
 	try {
 		if (propertyp->isMany()) {
@@ -412,14 +417,14 @@ static zval *sdo_do_read_value(sdo_do_object *sdo, const char *xpath, const Prop
 
 
 		ALLOC_INIT_ZVAL(return_value);
-        Z_SET_REFCOUNT_P(return_value, 0);
+                Z_SET_REFCOUNT_P(return_value, 0);
 
 		if (dop->isNull(xpath)) {
 			RETVAL_NULL();
 		} else {
 			switch(propertyp->getTypeEnum()) {
 			case Type::OtherTypes: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'OtherTypes' for '%s'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__, propertyp->getName());
 				break;
@@ -448,7 +453,7 @@ static zval *sdo_do_read_value(sdo_do_object *sdo, const char *xpath, const Prop
 			case Type::CharacterType: {
 				wchar_value = dop->getCharacter(xpath);
 				if (wchar_value > INT_MAX) {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_WARNING, "%s%s%s(): wide character data lost for '%s'",
 						class_name, space, get_active_function_name(TSRMLS_C), propertyp->getName());
 				}
@@ -490,7 +495,7 @@ static zval *sdo_do_read_value(sdo_do_object *sdo, const char *xpath, const Prop
 			case Type::OpenDataObjectType: {
 				doh_value = dop->getDataObject(xpath);
 				if (!doh_value) {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					php_error(E_WARNING, "%s%s%s(): read a NULL DataObject for property '%s'",
 						class_name, space, get_active_function_name(TSRMLS_C), propertyp->getName());
 					RETVAL_NULL();
@@ -500,19 +505,19 @@ static zval *sdo_do_read_value(sdo_do_object *sdo, const char *xpath, const Prop
 				break;
 			}
 			case Type::ChangeSummaryType: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'ChangeSummaryType'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
 			}
 			case Type::TextType: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'TextType'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
 			}
 			default: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type '%s' for property '%s'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__,
 					propertyp->getType().getName(), propertyp->getName());
@@ -533,7 +538,12 @@ static zval *sdo_do_read_value(sdo_do_object *sdo, const char *xpath, const Prop
 /*
 static zval *read_property(zval *object, zval *offset, int type TSRMLS_DC)
 */
+/* TODO discover minimum PHP version requirement maybe 5.1 */
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+static zval *sdo_do_read_property(zval *object, zval *offset, int type, const struct _zend_literal *key TSRMLS_DC)
+#else
 static zval *sdo_do_read_property(zval *object, zval *offset, int type TSRMLS_DC)
+#endif
 {
 /*
 	return sdo_do_read_dimension(object, offset, type TSRMLS_DC);
@@ -631,18 +641,23 @@ static void sdo_do_unset_dimension(zval *object, zval *offset TSRMLS_DC)
 	}
 }
 /* }}} */
-
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+static void sdo_do_unset_property(zval *object, zval *member, const zend_literal *key TSRMLS_DC)
+{
+  sdo_do_unset_dimension( object, member TSRMLS_CC);
+}
+#endif
 /* {{{ sdo_do_write_dimension
  */
 static void sdo_do_write_dimension(zval *object, zval *offset, zval *z_propertyValue TSRMLS_DC)
 {
-	const char			*xpath;
-	const Property		*property_p;
-	sdo_do_object		*my_object, *value_object;
-	DataObjectPtr		 dop;
-	zval				 temp_zval;
-	Type::Types          type_enum;
-//	char				*class_name, *space;
+	const char	*xpath;
+	const Property	*property_p;
+	sdo_do_object	*my_object, *value_object;
+	DataObjectPtr	dop;
+	zval		temp_zval;
+	Type::Types     type_enum;
+	const char	*class_name, *space;
 
 	my_object = sdo_do_get_instance(object TSRMLS_CC);
 	dop = my_object->dop;
@@ -683,7 +698,7 @@ static void sdo_do_write_dimension(zval *object, zval *offset, zval *z_propertyV
 
 			switch(type_enum) {
 			case Type::OtherTypes: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'OtherTypes'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
@@ -757,13 +772,13 @@ static void sdo_do_write_dimension(zval *object, zval *offset, zval *z_propertyV
 			case Type::DataObjectType:
 			case Type::OpenDataObjectType: {
 				if (Z_TYPE_P(z_propertyValue) != IS_OBJECT) {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0,0 TSRMLS_CC,
 						"%s%s%s(): cannot cast %s to %s for '%s'",
 						class_name, space, get_active_function_name(TSRMLS_C),
 						zend_zval_type_name(z_propertyValue), CLASS_NAME, xpath);
 				} else if (!instanceof_function(Z_OBJCE_P(z_propertyValue), sdo_dataobjectimpl_class_entry TSRMLS_CC)) {
-					/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+					class_name = get_active_class_name(&space TSRMLS_CC);
 					sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0,0 TSRMLS_CC,
 						"%s%s%s(): cannot cast %s to %s for '%s'",
 						class_name, space, get_active_function_name(TSRMLS_C),
@@ -776,19 +791,19 @@ static void sdo_do_write_dimension(zval *object, zval *offset, zval *z_propertyV
 				break;
 			}
 			case Type::ChangeSummaryType: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'ChangeSummaryType'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
 			}
 			case Type::TextType: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type 'TextType'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 				break;
 			}
 			default: {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_ERROR, "%s%s%s(): internal error (%i) - unexpected DataObject type '%s' for property '%s'",
 					class_name, space, get_active_function_name(TSRMLS_C), __LINE__,
 					(property_p ? property_p->getType().getName() : ""), xpath);
@@ -801,7 +816,12 @@ static void sdo_do_write_dimension(zval *object, zval *offset, zval *z_propertyV
 	zval_dtor(&temp_zval);
 }
 /* }}} */
-
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+static void sdo_do_write_property(zval *object, zval *member, zval *value, const struct _zend_literal *key TSRMLS_DC)
+{
+  sdo_do_write_dimension( object, member, value TSRMLS_CC);
+}
+#endif
 /* {{{ sdo_do_get_properties
  * called as a result of print_r() or vardump(), but doesn't get called for reflection
  * Returns an array of name=>value pairs for the properties of the data object
@@ -1064,8 +1084,7 @@ static void sdo_do_iterator_rewind (zend_object_iterator *iter TSRMLS_DC)
 #if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 1)
 zend_object_iterator *sdo_do_get_iterator(zend_class_entry *ce, zval *object, int by_ref TSRMLS_DC)
 {
-//	char *class_name, *space;
-	/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+	const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 
 	if (by_ref) {
 		php_error(E_ERROR, "%s%s%s(): an iterator cannot be used with foreach by reference",
@@ -1287,7 +1306,7 @@ static int sdo_do_unserialize (zval **object, zend_class_entry *ce, const unsign
 			*/
 			sdo_do_new(*object, root_dop TSRMLS_CC);
 		} else {
-			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 			sdo_throw_exception_ex (sdo_exception_class_entry, 0,0 TSRMLS_CC,
 				"%s%s%s(): unserialized document of type \"%s\":\"%s\" has no root data object",
 				class_name, space, get_active_function_name(TSRMLS_C),
@@ -1323,11 +1342,23 @@ void sdo_do_minit(zend_class_entry *tmp_ce TSRMLS_DC)
 	sdo_do_object_handlers.read_dimension = sdo_do_read_dimension;
 	sdo_do_object_handlers.read_property = sdo_do_read_property;
 	sdo_do_object_handlers.write_dimension = sdo_do_write_dimension;
-	sdo_do_object_handlers.write_property = sdo_do_write_dimension;
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+	sdo_do_object_handlers.write_property = sdo_do_write_property;
+#else
+        sdo_do_object_handlers.write_property = sdo_do_write_dimension;
+#endif
 	sdo_do_object_handlers.has_dimension = sdo_do_has_dimension;
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+        sdo_do_object_handlers.has_property = sdo_do_has_property;
+#else
 	sdo_do_object_handlers.has_property = sdo_do_has_dimension;
+#endif
 	sdo_do_object_handlers.unset_dimension = sdo_do_unset_dimension;
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+        sdo_do_object_handlers.unset_property = sdo_do_unset_property;
+#else
 	sdo_do_object_handlers.unset_property = sdo_do_unset_dimension;
+#endif
 	sdo_do_object_handlers.get_properties = sdo_do_get_properties;
 	sdo_do_object_handlers.compare_objects = sdo_do_compare_objects;
 	sdo_do_object_handlers.cast_object = sdo_do_cast_object;
@@ -1336,7 +1367,10 @@ void sdo_do_minit(zend_class_entry *tmp_ce TSRMLS_DC)
 	sdo_do_iterator_funcs.dtor = sdo_do_iterator_dtor;
 	sdo_do_iterator_funcs.valid = sdo_do_iterator_valid;
 	sdo_do_iterator_funcs.get_current_data = sdo_do_iterator_current_data;
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+#else
 	sdo_do_iterator_funcs.get_current_key = sdo_do_iterator_current_key;
+#endif
 	sdo_do_iterator_funcs.move_forward = sdo_do_iterator_move_forward;
 	sdo_do_iterator_funcs.rewind = sdo_do_iterator_rewind;
 	sdo_do_iterator_funcs.invalidate_current = 0;
@@ -1347,8 +1381,7 @@ void sdo_do_minit(zend_class_entry *tmp_ce TSRMLS_DC)
  */
 PHP_METHOD(SDO_DataObjectImpl, __construct)
 {
-//	char *class_name, *space;
-	/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+	const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 
 	php_error(E_ERROR, "%s%s%s(): internal error - private constructor was called",
 		class_name, space, get_active_function_name(TSRMLS_C));
