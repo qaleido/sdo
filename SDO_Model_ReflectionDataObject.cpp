@@ -203,11 +203,11 @@ static int sdo_model_rdo_cast_object(zval *readobj, zval *writeobj, int type, in
 void sdo_model_rdo_minit(zend_class_entry *tmp_ce TSRMLS_DC)
 {
 	zend_class_entry **reflector_ce_ptr;
-//	char *class_name, *space;
+	const char *class_name, *space;
 	tmp_ce->create_object = sdo_model_rdo_object_create;
 
 	if (zend_hash_find(CG(class_table), "reflector", sizeof("reflector"), (void **)&reflector_ce_ptr) == FAILURE) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - could not find Reflector class",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
@@ -231,7 +231,7 @@ PHP_METHOD(SDO_Model_ReflectionDataObject, __construct)
 	int argc;
 	zval *z_do;
 	sdo_model_rdo_object *my_object;
-//	char *class_name, *space;
+	const char *class_name, *space;
 
 	if ((argc = ZEND_NUM_ARGS()) != 1) {
 		WRONG_PARAM_COUNT;
@@ -245,7 +245,7 @@ PHP_METHOD(SDO_Model_ReflectionDataObject, __construct)
 
 	DataObjectPtr dop = sdo_do_get(z_do TSRMLS_CC);
 	if (!dop) {
-		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETURN_NULL();
@@ -273,21 +273,24 @@ PHP_METHOD(SDO_Model_ReflectionDataObject, export)
 {
 	zend_class_entry *reflection_ce;
 	zend_function	 *reflection_export_zf;
-//	char			 *class_name, *space;
+	const char	 *class_name, *space;
 
 	/* Just call up to Reflection::export */
 	reflection_ce = zend_fetch_class ("Reflection", strlen("Reflection"),
 		ZEND_FETCH_CLASS_AUTO TSRMLS_CC);
 	if (!reflection_ce) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - could not find Reflection class",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
 	}
-
+#if PHP_MAJOR_VERSION > 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4)
+        reflection_export_zf = zend_std_get_static_method(reflection_ce, "export", strlen("export"), NULL TSRMLS_CC);
+#else
 	reflection_export_zf = zend_std_get_static_method(reflection_ce, "export", strlen("export") TSRMLS_CC);
+#endif
 	if (!reflection_export_zf) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - could not call Reflection::export method",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
