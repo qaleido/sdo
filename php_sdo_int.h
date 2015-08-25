@@ -120,7 +120,7 @@ extern PHP_SDO_API void sdo_model_property_string (ostringstream& print_buf, con
 extern PHP_SDO_API void sdo_model_rdo_minit(zend_class_entry *tmp TSRMLS_DC);
 
 extern PHP_SDO_API zval *sdo_throw_exception(zend_class_entry *ce, const char *message, long code, zval *z_cause TSRMLS_DC);
-extern PHP_SDO_API zval *sdo_throw_exception_ex(zend_class_entry *ce, long code, zval *z_cause TSRMLS_DC, char *format, ...);
+extern PHP_SDO_API zval *sdo_throw_exception_ex(zend_class_entry *ce, long code, zval *z_cause TSRMLS_DC, const char *format, ...);
 extern PHP_SDO_API void sdo_exception_minit(zend_class_entry *tmp TSRMLS_DC);
 extern PHP_SDO_API void sdo_exception_new(zval *me, zend_class_entry *ce, const char *message, long code, zval *cause TSRMLS_DC);
 extern PHP_SDO_API zend_function_entry *sdo_exception_get_methods();
@@ -128,7 +128,7 @@ extern PHP_SDO_API zval *sdo_throw_runtimeexception(SDORuntimeException *e TSRML
 extern PHP_SDO_API void sdo_cppexception_minit(zend_class_entry *tmp TSRMLS_DC);
 extern PHP_SDO_API void sdo_cppexception_new(zval *me, SDORuntimeException *cpp_exception TSRMLS_DC);
 
-extern PHP_SDO_API void sdo_make_long_class_constant(zend_class_entry *ce, char *name, long value);
+extern PHP_SDO_API void sdo_make_long_class_constant(zend_class_entry *ce, const char *name, long value);
 
 extern PHP_SDO_API int sdo_parse_offset_param(DataObjectPtr dop, zval *z_offset,
 	const Property **return_property, const char **return_xpath, int property_required, int quiet TSRMLS_DC);
