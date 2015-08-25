@@ -27,7 +27,7 @@ static char rcs_id[] = "$Id: xmldas_utils.cpp 207591 2006-02-20 18:50:26Z mfp $"
 #include <iostream>
 #include <math.h>
 #include "zend_config.w32.h"
-#endif 
+#endif
 
 #include "php_sdo_das_xml_int.h"
 
@@ -38,21 +38,21 @@ zend_class_entry *sdo_das_xml_fileexception_ce = NULL;
 
 /* {{{ sdo_das_parserexception_minit
  */
-void sdo_das_xml_parserexception_minit(TSRMLS_D) 
+void sdo_das_xml_parserexception_minit(TSRMLS_D)
 {
-	zend_class_entry ce;
+    zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "SDO_DAS_XML_ParserException", sdo_exception_get_methods());
-    sdo_das_xml_parserexception_ce = zend_register_internal_class_ex(&ce, NULL, "sdo_exception" TSRMLS_CC);
+    sdo_das_xml_parserexception_ce = zend_register_internal_class_ex(&ce, NULL, (char *)"sdo_exception" TSRMLS_CC);
 }
 /* }}} */
 
 /* {{{ sdo_das_parserexception_minit
  */
-void sdo_das_xml_fileexception_minit(TSRMLS_D) 
+void sdo_das_xml_fileexception_minit(TSRMLS_D)
 {
-  	zend_class_entry ce;
+    zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "SDO_DAS_XML_FileException", sdo_exception_get_methods());
-    sdo_das_xml_fileexception_ce = zend_register_internal_class_ex(&ce, NULL, "sdo_exception" TSRMLS_CC);
+    sdo_das_xml_fileexception_ce = zend_register_internal_class_ex(&ce, NULL, (char *)"sdo_exception" TSRMLS_CC);
 }
 /* }}} */
 
@@ -74,9 +74,9 @@ zval *sdo_das_xml_throw_parserexception(char *msg TSRMLS_DC)
 
 /* {{{ sdo_das_xml_throw_fileexception
  */
-zval *sdo_das_xml_throw_fileexception(char *filename TSRMLS_DC)
+zval *sdo_das_xml_throw_fileexception(const char *filename TSRMLS_DC)
 {
-	return zend_throw_exception_ex(sdo_das_xml_fileexception_ce, 
+	return zend_throw_exception_ex(sdo_das_xml_fileexception_ce,
 		0 TSRMLS_CC, "File \"%s\" could not be found", filename);
 }
 /* }}} */

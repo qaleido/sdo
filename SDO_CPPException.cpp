@@ -102,7 +102,7 @@ static zend_object_value sdo_cppexception_create_object(zend_class_entry *ce TSR
 
 /* {{{ sdo_cppexception_get_property
  */
-static void sdo_cppexception_get_property(zval *me, /* const */ char *name, long name_len, zval *return_value TSRMLS_DC)
+static void sdo_cppexception_get_property(zval *me, const char *name, long name_len, zval *return_value TSRMLS_DC)
 {
 	zval *value;
 
@@ -224,8 +224,7 @@ void sdo_cppexception_new(zval *me, SDORuntimeException *cpp_exception TSRMLS_DC
 	}
 
 	if (object_init_ex(me, sdo_cppexception_class_entry) == FAILURE) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
-//		class_name = get_active_class_name(&space TSRMLS_CC);
+		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate %s object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__, CLASS_NAME);
 		return;

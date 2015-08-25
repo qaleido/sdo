@@ -83,7 +83,6 @@ SDO_DEBUG_DESTROY(das_changesummary)
 static zend_object_value sdo_das_changesummary_object_create(zend_class_entry *ce TSRMLS_DC)
 {
 	zend_object_value retval;
-	zval *tmp; /* this must be passed to hash_copy, but doesn't seem to be used */
 	sdo_das_changesummary_object *my_object;
 
 	my_object = (sdo_das_changesummary_object *)emalloc(sizeof(sdo_das_changesummary_object));
@@ -92,9 +91,9 @@ static zend_object_value sdo_das_changesummary_object_create(zend_class_entry *c
 	my_object->zo.guards = NULL;
 	ALLOC_HASHTABLE(my_object->zo.properties);
 	zend_hash_init(my_object->zo.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-//	zend_hash_copy(my_object->zo.properties, &ce->default_properties, (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
 
 	#if PHP_VERSION_ID < 50399
+          zval *tmp;
 	  zend_hash_copy(my_object->zo.properties, &ce->default_properties, (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
 	#else
 	  object_properties_init(&my_object->zo, ce);
@@ -102,8 +101,6 @@ static zend_object_value sdo_das_changesummary_object_create(zend_class_entry *c
 
 	retval.handle = zend_objects_store_put(my_object, SDO_FUNC_DESTROY(das_changesummary), sdo_das_changesummary_object_free_storage, NULL TSRMLS_CC);
 	retval.handlers = zend_get_std_object_handlers();
-//	retval.handlers->add_ref = SDO_FUNC_ADDREF(das_changesummary);
-//	retval.handlers->del_ref = SDO_FUNC_DELREF(das_changesummary);
 	SDO_DEBUG_ALLOCATE(retval.handle, my_object);
 	return retval;
 }
@@ -114,11 +111,10 @@ static zend_object_value sdo_das_changesummary_object_create(zend_class_entry *c
 void sdo_das_changesummary_new(zval *me, ChangeSummaryPtr change_summary TSRMLS_DC)
 {
 	sdo_das_changesummary_object *my_object;
-//	char *class_name, *space;
 
 	Z_TYPE_P(me) = IS_OBJECT;
 	if (object_init_ex(me, sdo_das_changesummary_class_entry) == FAILURE) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - failed to instantiate object",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		return;
@@ -214,10 +210,9 @@ PHP_METHOD(SDO_DAS_ChangeSummary, isLogging)
 PHP_METHOD(SDO_DAS_ChangeSummary, getOldValues)
 {
 	sdo_das_changesummary_object	*my_object;
-	zval							*z_dataobject;
-	DataObjectPtr					 dop;
-	ChangeSummaryPtr				 change_summary;
-//	char							*class_name, *space;
+	zval				*z_dataobject;
+	DataObjectPtr			dop;
+	ChangeSummaryPtr		change_summary;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
 		"O", &z_dataobject, sdo_dataobjectimpl_class_entry) == FAILURE)
@@ -229,7 +224,7 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getOldValues)
 	/* get the supplied data object */
 	dop = sdo_do_get (z_dataobject TSRMLS_CC);
 	if (!dop) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETVAL_NULL();
@@ -283,12 +278,11 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getChangedDataObjects)
  */
 PHP_METHOD(SDO_DAS_ChangeSummary, getChangeType)
 {
-	sdo_das_changesummary_object *my_object;
-	zval						 *z_dataobject;
-	DataObjectPtr				  dop;
-	ChangeSummaryPtr			  change_summary;
-	long						  change_type = CS_NONE;
-//	char						 *class_name, *space;
+	sdo_das_changesummary_object  *my_object;
+	zval                          *z_dataobject;
+	DataObjectPtr                 dop;
+	ChangeSummaryPtr              change_summary;
+	long                          change_type = CS_NONE;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
 		"O", &z_dataobject, sdo_dataobjectimpl_class_entry) == FAILURE)
@@ -300,7 +294,7 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getChangeType)
 	/* get the supplied data object */
 	dop = sdo_do_get (z_dataobject TSRMLS_CC);
 	if (!dop) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		const char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETVAL_NULL();
@@ -330,12 +324,11 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getChangeType)
  */
 PHP_METHOD(SDO_DAS_ChangeSummary, getOldContainer)
 {
-	sdo_das_changesummary_object *my_object;
-	zval				*z_dataobject;
-	DataObjectPtr		 dop, container_dop;
-	ChangeSummaryPtr	 change_summary;
-	long				 change_type = 0;
-//	char				*class_name, *space;
+	sdo_das_changesummary_object  *my_object;
+	zval                          *z_dataobject;
+	DataObjectPtr                 dop, container_dop;
+	ChangeSummaryPtr              change_summary;
+	const char                    *class_name, *space;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
 		"O", &z_dataobject, sdo_dataobjectimpl_class_entry) == FAILURE)
@@ -347,7 +340,7 @@ PHP_METHOD(SDO_DAS_ChangeSummary, getOldContainer)
 	/* get the supplied data object */
 	dop = sdo_do_get(z_dataobject TSRMLS_CC);
 	if (!dop) {
-		/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+		class_name = get_active_class_name(&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DataObject not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
 		RETVAL_NULL();

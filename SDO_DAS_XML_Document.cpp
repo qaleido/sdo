@@ -198,14 +198,13 @@ PHP_METHOD(SDO_DAS_XML_Document, getRootDataObject)
 {
     xmldocument_object	*xmldocument;
     DataObjectPtr		 root_do;
-//	char				*class_name, *space;
 
     xmldocument = (xmldocument_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
     try {
         root_do = xmldocument->xmlDocumentPtr->getRootDataObject();
 		if (!root_do) {
-			/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+			const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
             php_error(E_ERROR, "%s%s%s(): internal error(%i) - root DataObject is NULL",
 				class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
             RETURN_NULL();
@@ -267,9 +266,8 @@ PHP_METHOD(SDO_DAS_XML_Document, getRootElementName)
  */
 PHP_METHOD(SDO_DAS_XML_Document, setXMLDeclaration)
 {
-    zend_bool			 xml_declaration;
+    zend_bool		xml_declaration;
     xmldocument_object  *xmldocument;
-//	char				*class_name, *space;
 
     if (ZEND_NUM_ARGS() != 1) {
         WRONG_PARAM_COUNT;
@@ -279,7 +277,7 @@ PHP_METHOD(SDO_DAS_XML_Document, setXMLDeclaration)
     }
     xmldocument = (xmldocument_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
     if (!xmldocument) {
-		/* const */ char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
+		const char *space, *class_name = get_active_class_name (&space TSRMLS_CC);
 		php_error(E_ERROR, "%s%s%s(): internal error (%i) - SDO_DAS_XML_Document not found in store",
 			class_name, space, get_active_function_name(TSRMLS_C), __LINE__);
         RETURN_FALSE;

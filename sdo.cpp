@@ -444,7 +444,7 @@ PHP_MINIT_FUNCTION(sdo)
 	}
 
 	REGISTER_STRING_CONSTANT("SDO_TYPE_NAMESPACE_URI", (char *)Type::SDOTypeNamespaceURI.c_str(), CONST_CS | CONST_PERSISTENT);
-	REGISTER_STRING_CONSTANT("SDO_VERSION", PHP_SDO_VERSION, CONST_CS | CONST_PERSISTENT);
+	REGISTER_STRING_CONSTANT("SDO_VERSION", (char *)PHP_SDO_VERSION, CONST_CS | CONST_PERSISTENT);
 
 	/* interface SDO_PropertyAccess */
 	INIT_CLASS_ENTRY(ce, "SDO_PropertyAccess", sdo_propertyaccess_methods);
@@ -585,7 +585,7 @@ PHP_MINIT_FUNCTION(sdo)
 PHP_RINIT_FUNCTION(sdo)
 {
    /* pass on the php precision to Tuscany */
-   long precision = php_ini_long("precision", sizeof("precision"), false);
+   long precision = php_ini_long( (char*)"precision", sizeof("precision"), false);
    if (precision > 0) {
        SDODataConverter::precision = precision;
    }

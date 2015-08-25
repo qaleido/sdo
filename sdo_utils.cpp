@@ -38,7 +38,7 @@ static char rcs_id[] = "$Id: sdo_utils.cpp 229262 2007-02-07 11:26:44Z cem $";
 /* {{{ sdo_make_long_class_constant
  * creates a class constant
  */
-void sdo_make_long_class_constant(zend_class_entry *ce, char *name, long value)
+void sdo_make_long_class_constant(zend_class_entry *ce, const char *name, long value)
 {
 	/* Cannot emalloc the storage for this constant, it must endure beyond the current request */
 	zval *z_constant = (zval *)malloc(sizeof(zval));
@@ -58,17 +58,15 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	int property_required,
 	int quiet TSRMLS_DC) {
 
-	long			 prop_index;
+	long		prop_index;
 	const Property  *property_p;
-	const char		*xpath;
-//	char			*class_name;
-//	char		    *space;
+	const char	*xpath, *class_name, *space;
 
 
 	if (!z_offset) {
 		/* get here with a statement like $sdo[] = 'some value'; */
 		if (!quiet) {
-			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			class_name = get_active_class_name(&space TSRMLS_CC);
 			sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0, 0 TSRMLS_CC,
 				"%s%s%s(): cannot append a value - this object is not many-valued",
 				class_name, space, get_active_function_name(TSRMLS_C));
@@ -79,7 +77,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	switch(Z_TYPE_P(z_offset)) {
 	case IS_NULL:
 		if (!quiet) {
-			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			class_name = get_active_class_name(&space TSRMLS_CC);
 			sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0, 0 TSRMLS_CC,
 				"%s%s%s(): parameter is NULL",
 				class_name, space, get_active_function_name(TSRMLS_C));
@@ -105,10 +103,10 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	case IS_DOUBLE:
 		if (Z_TYPE_P(z_offset) == IS_DOUBLE) {
 			if (!quiet) {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				php_error(E_WARNING, "%s%s%s(): double parameter %f rounded to %i",
 					class_name, space, get_active_function_name(TSRMLS_C),
-					Z_DVAL_P(z_offset), (long)Z_DVAL_P(z_offset));
+					Z_DVAL_P(z_offset), (int)Z_DVAL_P(z_offset));
 			}
 			prop_index =(long)Z_DVAL_P(z_offset);
 		} else {
@@ -123,7 +121,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 	case IS_OBJECT:
 		if (!instanceof_function(Z_OBJCE_P(z_offset), sdo_model_property_class_entry TSRMLS_CC)) {
 			if (!quiet) {
-				/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+				class_name = get_active_class_name(&space TSRMLS_CC);
 				sdo_throw_exception_ex (sdo_unsupportedoperationexception_class_entry, 0, 0 TSRMLS_CC,
 					"%s%s%s(): expects object parameter to be SDO_Model_Property, %s given",
 					class_name, space, get_active_function_name(TSRMLS_C),
@@ -136,7 +134,7 @@ int sdo_parse_offset_param (DataObjectPtr dop, zval *z_offset,
 		break;
 	default:
 		if (!quiet) {
-			/* const */ char *space, *class_name = get_active_class_name(&space TSRMLS_CC);
+			class_name = get_active_class_name(&space TSRMLS_CC);
 			php_error(E_ERROR, "%s%s%s(): internal error - invalid dimension type %i",
 				class_name, space, get_active_function_name(TSRMLS_C),
 				Z_TYPE_P(z_offset));

@@ -50,7 +50,7 @@ void sdo_das_xml_fileexception_minit(TSRMLS_D);
 
 /* 	 The following three are defined in xmldas_utils.cpp - they logically belong in a xmldas_utils.h file	*/
 zval *sdo_das_xml_throw_runtimeexception(SDORuntimeException *e TSRMLS_DC);
-zval *sdo_das_xml_throw_fileexception(char* filename TSRMLS_DC);
+zval *sdo_das_xml_throw_fileexception(const char* filename TSRMLS_DC);
 zval *sdo_das_xml_throw_parserexception(char* filename TSRMLS_DC);
 
 extern PHP_SDO_DAS_XML_API zend_class_entry *sdo_das_xml_class_entry;

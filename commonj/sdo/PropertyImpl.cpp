@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- *   
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -65,13 +65,13 @@ namespace commonj{
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // construction by DAS 
+    // construction by DAS
     ///////////////////////////////////////////////////////////////////////////
-    
-       PropertyImpl::PropertyImpl(const Type& cont, 
-                                  const char* inname, 
-                                  const TypeImpl& intype, 
-                                  bool many ,    
+
+       PropertyImpl::PropertyImpl(const Type& cont,
+                                  const char* inname,
+                                  const TypeImpl& intype,
+                                  bool many ,
                                   bool ro ,
                                   bool contain) :
           containertype(cont),
@@ -156,11 +156,11 @@ namespace commonj{
           {
              if (bisArray)
              {
-                delete[] defvalue;
+                free(defvalue);
              }
              else
              {
-                delete defvalue;
+                free(defvalue);
              }
           }
           if (stringdef != 0)
@@ -170,7 +170,7 @@ namespace commonj{
        }
 
     ///////////////////////////////////////////////////////////////////////////
-    // Setting of attributes  by DAS 
+    // Setting of attributes  by DAS
     ///////////////////////////////////////////////////////////////////////////
 
     void PropertyImpl::setMany(bool many)
@@ -194,7 +194,7 @@ namespace commonj{
         {
             bisReference = true;
         }
-        else 
+        else
         {
             bisReference = false;
         }
@@ -202,7 +202,7 @@ namespace commonj{
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // Setting of defaults by DAS 
+    // Setting of defaults by DAS
     ///////////////////////////////////////////////////////////////////////////
 
     void PropertyImpl::setDefault(bool b )
@@ -272,7 +272,7 @@ namespace commonj{
      ///////////////////////////////////////////////////////////////////////////
     // Substitution groups.
        ///////////////////////////////////////////////////////////////////////////
-    const Type* PropertyImpl::getSubstitutionType(const char* inname) const 
+    const Type* PropertyImpl::getSubstitutionType(const char* inname) const
     {
         for (unsigned int i=0;i<substitutions.size();i++)
         {
@@ -284,7 +284,7 @@ namespace commonj{
         return 0;
     }
 
-    const char * PropertyImpl::getSubstitutionName(unsigned int index) const 
+    const char * PropertyImpl::getSubstitutionName(unsigned int index) const
     {
         if (index < getSubstitutionCount())
         {
@@ -299,7 +299,7 @@ namespace commonj{
         return substitutions.size();
     }
 
-    const Type* PropertyImpl::getSubstitutionType(unsigned int index) const 
+    const Type* PropertyImpl::getSubstitutionType(unsigned int index) const
     {
         if (index < getSubstitutionCount())
         {
@@ -308,12 +308,12 @@ namespace commonj{
         return 0;
     }
 
-    void PropertyImpl::setSubstitution(DataFactoryPtr mdg, const char* alias, 
+    void PropertyImpl::setSubstitution(DataFactoryPtr mdg, const char* alias,
                                   const Type& substype)
     {
         substitutions.push_back(Substitution(mdg,alias,substype));
     }
-    
+
 
      ///////////////////////////////////////////////////////////////////////////
     // Returns the name of the property.
@@ -332,7 +332,7 @@ namespace commonj{
     {
         char* tmp = new char[strlen(alias)+1];
         strcpy(tmp,alias);
-        aliases.push_back(tmp); 
+        aliases.push_back(tmp);
     }
 
       void PropertyImpl::setAlias(const SDOString& alias)
@@ -354,7 +354,7 @@ namespace commonj{
         return aliases.size();
     }
 
-  
+
     ///////////////////////////////////////////////////////////////////////////
     // Returns the type of the property.
      ///////////////////////////////////////////////////////////////////////////
@@ -375,16 +375,16 @@ namespace commonj{
     {
         return &type;
     }
-  
+
     ///////////////////////////////////////////////////////////////////////////
     // Returns whether the property is many-valued.
     ///////////////////////////////////////////////////////////////////////////
     bool PropertyImpl::isMany() const
     {
-          if(getTypeImpl()->isFromList())return true; 
+          if(getTypeImpl()->isFromList())return true;
           return bisMany;
     }
-  
+
      ///////////////////////////////////////////////////////////////////////////
     // Returns whether the property is containment.
     ///////////////////////////////////////////////////////////////////////////
@@ -417,12 +417,12 @@ namespace commonj{
           return opposite;
     }
 
-    void PropertyImpl::setOpposite(const Property* opp) 
+    void PropertyImpl::setOpposite(const Property* opp)
     {
         opposite = opp;
     }
     ///////////////////////////////////////////////////////////////////////////
-    // Returns the default value this property will have in a 
+    // Returns the default value this property will have in a
     // data object where the property hasn't been set.
      ///////////////////////////////////////////////////////////////////////////
 
@@ -432,7 +432,7 @@ namespace commonj{
         return bDefaulted;
     }
 
-    const char*      PropertyImpl::getCStringDefault() const 
+    const char*      PropertyImpl::getCStringDefault() const
     {
         PropertyImpl* p = (PropertyImpl*)this;
         return getTypeImpl()->convertToCString(defvalue, &(p->stringdef), defvaluelength);
@@ -469,25 +469,25 @@ namespace commonj{
     {
         return getTypeImpl()->convertToDouble(defvalue,defvaluelength);
     }
-    const SDODate      PropertyImpl::getDateDefault() const 
+    const SDODate      PropertyImpl::getDateDefault() const
     {
         return getTypeImpl()->convertToDate(defvalue,defvaluelength);
     }
     unsigned int PropertyImpl::getStringDefault(wchar_t* val, unsigned int max) const
     {
-        if (val == 0 || max == 0) return defvaluelength; 
+        if (val == 0 || max == 0) return defvaluelength;
         return getTypeImpl()->convertToString(defvalue, val, defvaluelength, max);
-    
+
     }
     unsigned int PropertyImpl::getBytesDefault(char* val, unsigned int max) const
     {
-        if (val == 0 || max == 0) return defvaluelength; 
+        if (val == 0 || max == 0) return defvaluelength;
         return getTypeImpl()->convertToBytes(defvalue, val, defvaluelength, max);
     }
 
     unsigned int PropertyImpl::getBytesDefault(SDOString& val, unsigned int max) const
     {
-        if (max == 0) return defvaluelength; 
+        if (max == 0) return defvaluelength;
         return getTypeImpl()->convertToBytes(defvalue, val, defvaluelength, max);
     }
 
@@ -500,84 +500,84 @@ namespace commonj{
     // sets the default value by type
     ///////////////////////////////////////////////////////////////////////////
 
-    void PropertyImpl::setDefaultCString(const char* s) 
+    void PropertyImpl::setDefaultCString(const char* s)
     {
         bDefaulted=true;
         bisArray = true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,s); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,s);
     }
-    void PropertyImpl::setDefaultCString(const SDOString& s) 
+    void PropertyImpl::setDefaultCString(const SDOString& s)
     {
         bDefaulted=true;
         bisArray = true;
-        defvaluelength = getTypeImpl()->convert(&defvalue, s); 
+        defvaluelength = getTypeImpl()->convert(&defvalue, s);
     }
     void PropertyImpl::setDefaultString(    const wchar_t* c , unsigned int len )
     {
         bDefaulted=true;
         bisArray = true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,c, len); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,c, len);
     }
     void PropertyImpl::setDefaultBytes(    const char* c , unsigned int len )
     {
         bDefaulted=true;
         bisArray = true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,c, len); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,c, len);
     }
     void PropertyImpl::setDefaultBytes(const SDOString& c , unsigned int len)
     {
         bDefaulted=true;
         bisArray = true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,c, len); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,c, len);
     }
     void PropertyImpl::setDefaultBoolean(    const bool b  )
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,b); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,b);
     }
     void PropertyImpl::setDefaultByte(    const char c   )
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,c); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,c);
     }
     void PropertyImpl::setDefaultCharacter(   const wchar_t c)
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,c); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,c);
     }
     void PropertyImpl::setDefaultShort(   const short s  )
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,s); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,s);
     }
     void PropertyImpl::setDefaultInteger( const long i    )
     {
         bDefaulted=true;
 #if 32 ==64
-        defvaluelength = getTypeImpl()->convert(&defvalue,(int64_t)i); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,(int64_t)i);
 #else
-        defvaluelength = getTypeImpl()->convert(&defvalue,i); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,i);
 #endif
     }
     void PropertyImpl::setDefaultLong(const int64_t l)
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,l); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,l);
     }
     void PropertyImpl::setDefaultFloat(   const float f  )
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,f); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,f);
     }
     void PropertyImpl::setDefaultDouble(  const long double d )
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convert(&defvalue,d); 
+        defvaluelength = getTypeImpl()->convert(&defvalue,d);
     }
     void PropertyImpl::setDefaultDate(    const SDODate d )
     {
         bDefaulted=true;
-        defvaluelength = getTypeImpl()->convertDate(&defvalue,d); 
+        defvaluelength = getTypeImpl()->convertDate(&defvalue,d);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -589,7 +589,7 @@ namespace commonj{
     {
           return bisReadOnly;
     }
-  
+
 };
 };
 
